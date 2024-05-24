@@ -8,7 +8,7 @@ def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
 
-required_packages = ["requests", "pandas", "ipaddress", "html5lib", "beautifulsoup4"]
+required_packages = ["requests", "pandas", "ipaddress", "html5lib", "bs4"]
 
 # Check for each required package and install if not present
 for package_name in required_packages:
