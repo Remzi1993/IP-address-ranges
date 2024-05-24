@@ -2,6 +2,18 @@ import requests
 import pandas as pd
 import ipaddress
 from io import StringIO
+from bs4 import BeautifulSoup
+import sys
+
+
+def get_country_url(country_code):
+    url = "https://www.nirsoft.net/countryip/"
+    response = requests.get(url)
+    response.raise_for_status()  # Ensure we notice bad responses
+    soup = BeautifulSoup(response.text, "html.parser")
+    country_links = {a['href'].split('.')[0].strip().lower(): a['href'] for a in soup.find_all('a') if
+                     a['href'].endswith('.html')}
+    return country_links.get(country_code, None)
 
 
 def get_ip_ranges(country_url, owners):
@@ -11,7 +23,8 @@ def get_ip_ranges(country_url, owners):
 
     tables = pd.read_html(StringIO(response.text))
     isp_data = tables[-1]  # Assuming the last table contains the IP data
-    print(f"Columns in ISP DataFrame: {isp_data.columns}")
+    # Debug
+    # print(f"Columns in ISP DataFrame: {isp_data.columns}")
 
     # Ensure correct column names and data filtering
     owner_column = next(col for col in isp_data.columns if 'owner' in col.lower())
@@ -28,3 +41,17 @@ def get_ip_ranges(country_url, owners):
 
     print(f"Start IP: {start_ip}")
     print(f"End IP: {end_ip}")
+
+
+def main():
+    country = input("Enter the country code (e.g., nl for Netherlands): ").strip().lower()
+    owner = input("Enter the IP address owners to filter (comma-separated, e.g., Ziggo, KPN, Odido): ").strip().lower()
+    owners_list = [o.strip() for o in owner.split(',')]
+
+    country_url = get_country_url(country)
+    if not country_url:
+        print(f"Country code '{country}' not found on the website. Please enter a valid country code.")
+        sys.exit(1)
+
+    print("Note: This script is specifically made for: https://www.nirsoft.net/countryip/")
+    get_ip_ranges(country_url, owners_list)
