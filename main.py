@@ -1,9 +1,11 @@
 import sys
 import subprocess
 
+
 # Function to check and install required packages
-def install(package_name):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package_name])
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
 
 required_packages = ["requests", "pandas", "ipaddress", "html5lib", "beautifulsoup4"]
 
@@ -20,12 +22,15 @@ import ip_ranges_v2
 import requests
 from bs4 import BeautifulSoup
 
+
 def get_country_url(country_code):
     url = "https://www.nirsoft.net/countryip/"
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
-    country_links = {a['href'].split('.')[0].strip().lower(): a['href'] for a in soup.find_all('a') if a['href'].endswith('.html')}
+    country_links = {a['href'].split('.')[0].strip().lower(): a['href'] for a in soup.find_all('a') if
+                     a['href'].endswith('.html')}
     return country_links.get(country_code, None)
+
 
 if __name__ == "__main__":
     country = input("Enter the country code (e.g., nl for Netherlands): ").strip().lower()
