@@ -1,0 +1,8 @@
+<Configuration>
+	<MappedFolders>
+		<MappedFolder>
+			<HostFolder>%USERPROFILE%\Projects\Python\IP-address-ranges\dist</HostFolder>
+			<ReadOnly>true</ReadOnly>
+		</MappedFolder>
+	</MappedFolders>
+</Configuration>
