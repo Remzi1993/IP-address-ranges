@@ -3,7 +3,6 @@ import subprocess
 import importlib.util
 import platform
 
-
 # Function to check and install required packages
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
